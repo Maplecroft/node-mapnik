@@ -48,7 +48,8 @@ exports['test datasource'] = function(beforeExit, assert) {
         __id__: 245
     });
 
-    assert.deepEqual(ds.describe(), {
+    var desc = ds.describe();
+    var exp = {
         type: 'vector',
         extent: [
             -20037508.342789248,
@@ -70,9 +71,13 @@ exports['test datasource'] = function(beforeExit, assert) {
             LON: 'Number',
             LAT: 'Number'
         },
-        geometry_type: 'multipolygon',
-        has_features: true
-    });
+        geometry_type: 'polygon'
+    };
+    assert.equal(desc.type,exp.type);
+    assert.deepEqual(desc.extent,exp.extent);
+    assert.equal(desc.encoding,exp.encoding);
+    assert.deepEqual(desc.field,exp.field);
+    assert.equal(desc.geometry_type,exp.geometry_type);
 };
 
 
@@ -105,7 +110,8 @@ exports['test JSON datasource'] = function(beforeExit, assert) {
         __id__: 245
     });
 
-    assert.deepEqual(ds.describe(), {
+    var desc = ds.describe();
+    var exp = {
         type: 'vector',
         extent: [
             -20037508.342789,
@@ -127,7 +133,11 @@ exports['test JSON datasource'] = function(beforeExit, assert) {
             LON: 'Number',
             LAT: 'Number'
         },
-        geometry_type: 'multipolygon',
-        has_features: true
-    });
+        geometry_type: "polygon"
+    };
+    assert.equal(desc.type,exp.type);
+    assert.deepEqual(desc.extent,exp.extent);
+    assert.equal(desc.encoding,exp.encoding);
+    assert.deepEqual(desc.field,exp.field);
+    assert.equal(desc.geometry_type,exp.geometry_type);
 };

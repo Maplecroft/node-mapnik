@@ -31,6 +31,7 @@ static void describe_datasource(Local<Object> description, mapnik::datasource_pt
         }
         meta->Set(String::NewSymbol("styles"), s );
         */
+
     
         // type
         if (ds->type() == mapnik::datasource::Raster)
@@ -42,6 +43,7 @@ static void describe_datasource(Local<Object> description, mapnik::datasource_pt
             description->Set(String::NewSymbol("type"), String::New("vector"));
         }
     
+        // todo - this should only be available on the layer?
         // extent
         Local<Array> a = Array::New(4);
         mapnik::box2d<double> e = ds->envelope();
@@ -53,6 +55,9 @@ static void describe_datasource(Local<Object> description, mapnik::datasource_pt
     
         mapnik::layer_descriptor ld = ds->get_descriptor();
     
+        // name
+        description->Set(String::NewSymbol("name"), String::New(ld.get_name().c_str()));
+
         // encoding
         description->Set(String::NewSymbol("encoding"), String::New(ld.get_encoding().c_str()));
     
@@ -77,64 +82,17 @@ static void describe_datasource(Local<Object> description, mapnik::datasource_pt
             ++itr;
         }
         description->Set(String::NewSymbol("fields"), fields);
-    
-        mapnik::query q(ds->envelope());
-
-        mapnik::featureset_ptr fs = ds->features(q);
-        description->Set(String::NewSymbol("geometry_type"), Undefined());
-        description->Set(String::NewSymbol("has_features"), Boolean::New(false));
-    
-        // TODO - need to remove this after this lands:
-        // https://github.com/mapnik/mapnik/issues/701
-        if (fs)
+        /*
+        std::string geometry_type = ld.get_geometry_type();
+        if (geometry_type.empty())
         {
-            mapnik::feature_ptr fp = fs->next();
-            if (fp) {
-    
-                description->Set(String::NewSymbol("has_features"), Boolean::New(true));
-                if (fp->num_geometries() > 0)
-                {
-                    mapnik::geometry_type const& geom = fp->get_geometry(0);
-                    mapnik::eGeomType g_type = geom.type();
-                    Local<String> js_type = String::New("unknown");
-                    switch (g_type)
-                    {
-                        case mapnik::Point:
-                        {
-                           if (fp->num_geometries() > 1) {
-                               js_type = String::New("multipoint");
-                           } else {
-                               js_type = String::New("point");
-                           }
-                           break;
-                        }
-                        case mapnik::Polygon:
-                        {
-                           if (fp->num_geometries() > 1) {
-                               js_type = String::New("multipolygon");
-                           } else {
-                               js_type = String::New("polygon");
-                           }
-                           break;
-                        }
-                        case mapnik::LineString:
-                        {
-                           if (fp->num_geometries() > 1) {
-                               js_type = String::New("multilinestring");
-                           } else {
-                               js_type = String::New("linestring");
-                           }
-                           break;
-                        }
-                        default:
-                        {
-                           break;
-                        }
-                    }
-                    description->Set(String::NewSymbol("geometry_type"), js_type);
-                }
-            }
+            description->Set(String::NewSymbol("geometry_type"), Undefined());
         }
+        else
+        {
+            description->Set(String::NewSymbol("geometry_type"), String::New(geometry_type.c_str()));
+        }
+        */
     }
     catch (const std::exception & ex)
     {

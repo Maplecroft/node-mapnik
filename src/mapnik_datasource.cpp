@@ -25,6 +25,20 @@ void Datasource::Initialize(Handle<Object> target) {
     NODE_SET_PROTOTYPE_METHOD(constructor, "features", features);
     NODE_SET_PROTOTYPE_METHOD(constructor, "featureset", featureset);
 
+    // constants
+    NODE_MAPNIK_DEFINE_CONSTANT(constructor->GetFunction(),
+                                "Vector",mapnik::datasource::Vector)
+    NODE_MAPNIK_DEFINE_CONSTANT(constructor->GetFunction(),
+                                "Raster",mapnik::datasource::Raster)
+    NODE_MAPNIK_DEFINE_CONSTANT(constructor->GetFunction(),
+                                "Point",mapnik::datasource::Point)
+    NODE_MAPNIK_DEFINE_CONSTANT(constructor->GetFunction(),
+                                "LineString",mapnik::datasource::LineString)
+    NODE_MAPNIK_DEFINE_CONSTANT(constructor->GetFunction(),
+                                "Polygon",mapnik::datasource::Polygon)
+    NODE_MAPNIK_DEFINE_CONSTANT(constructor->GetFunction(),
+                                "Collection",mapnik::datasource::Collection)
+
     target->Set(String::NewSymbol("Datasource"),constructor->GetFunction());
 }
 
