@@ -561,7 +561,7 @@ void Image::EIO_Composite(uv_work_t* req)
 
     try
     {
-        mapnik::composite(closure->im1->this_->data(),closure->im2->this_->data(), closure->mode);
+        mapnik::composite(closure->im1->this_->data(),closure->im2->this_->data(), closure->mode, true, true);
     }
     catch (std::exception & ex)
     {
